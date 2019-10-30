@@ -376,6 +376,12 @@ class XiaomiGateway:
         _LOGGER.debug("write_ack << %s", resp)
         return _validate_data(resp)
 
+    def get_data(self, sid): # add this
+        cmd = '{ "cmd":"read","sid":"' + sid + '"}'
+        resp = self._send_cmd(cmd, "read_ack") if int(self.proto[0:1]) == 1 else self._send_cmd(cmd, "read_rsp")
+        _LOGGER.debug("read_ack << %s", resp)
+        return resp
+
     def get_from_hub(self, sid):
         """Get data from gateway"""
         cmd = '{ "cmd":"read","sid":"' + sid + '"}'
