@@ -218,6 +218,21 @@ class XiaomiGateway:
             if self._discover_devices():
                 break
 
+    def discover_sensors(self): # add this
+        cmd = '{"cmd" : "get_id_list"}' if int(self.proto[0:1]) == 1 else '{"cmd":"discovery"}'
+        resp = self._send_cmd(cmd, "get_id_list_ack") if int(self.proto[0:1]) == 1 \
+            else self._send_cmd(cmd, "discovery_rsp")
+        if resp is None or "token" not in resp or ("data" not in resp and "dev_list" not in resp):
+            return False
+        self.token = resp['token']
+        sids = []
+        if int(self.proto[0:1]) == 1:
+            sids = json.loads(resp["data"])
+        else:
+            for dev in resp["dev_list"]:
+                sids.append(dev["sid"])
+        return sids
+
     # pylint: disable=too-many-branches
     def _discover_devices(self):
 
