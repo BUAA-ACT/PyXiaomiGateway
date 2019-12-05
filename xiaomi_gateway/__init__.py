@@ -231,6 +231,7 @@ class XiaomiGateway:
         else:
             for dev in resp["dev_list"]:
                 sids.append(dev["sid"])
+        sids.append(self.sid) # gateway is also a sensor
         return sids
 
     # pylint: disable=too-many-branches
